@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { ChevronLeft, Home } from 'lucide-react';
+import { ChevronLeft, Home, Search } from 'lucide-react';
 
 function FloatingOrbs() {
   return (
@@ -69,6 +70,36 @@ function GoBackButton() {
   );
 }
 
+function SearchForm() {
+  const router = useRouter();
+  const [q, setQ] = useState('');
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!q) return router.push('/');
+        router.push(`/?q=${encodeURIComponent(q)}`);
+      }}
+      className="w-full sm:max-w-md"
+      role="search"
+      aria-label="Search the site"
+    >
+      <div className="relative flex items-center gap-2">
+        <span className="absolute left-3 text-white/60">
+          <Search className="h-4 w-4" />
+        </span>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search the site..."
+          className="w-full rounded-full border border-white/8 bg-white/4 py-3 pl-10 pr-4 text-sm text-white placeholder:text-white/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-cyan-400/20"
+        />
+      </div>
+    </form>
+  );
+}
+
 export function NotFoundScene() {
   const reduceMotion = useReducedMotion();
 
@@ -112,7 +143,13 @@ export function NotFoundScene() {
                   transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className="mt-5 bg-[linear-gradient(180deg,#ffffff_0%,#e2e8f0_50%,#67e8f9_100%)] bg-clip-text text-[clamp(4.1rem,28vw,6.8rem)] font-semibold leading-none -tracking-widest text-transparent [text-shadow:0_0_40px_rgba(56,189,248,0.12)]"
                 >
-                  404
+                  <motion.span
+                    whileHover={reduceMotion ? undefined : { scale: 1.03, rotate: -1 }}
+                    transition={{ type: 'spring', stiffness: 180, damping: 14 }}
+                    className="inline-block"
+                  >
+                    404
+                  </motion.span>
                 </motion.h1>
 
                 <motion.div
@@ -129,9 +166,12 @@ export function NotFoundScene() {
                   </p>
                 </motion.div>
 
-                <div className="mt-7 flex w-full flex-col gap-3">
-                  <ActionLink href="/" icon={Home} label="Go Home" />
-                  <GoBackButton />
+                <div className="mt-6 flex w-full flex-col items-center gap-4">
+                  <SearchForm />
+                  <div className="w-full mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:w-auto">
+                    <ActionLink href="/" icon={Home} label="Go Home" />
+                    <GoBackButton />
+                  </div>
                 </div>
               </div>
             </div>
@@ -156,7 +196,13 @@ export function NotFoundScene() {
                   transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className="mt-6 bg-[linear-gradient(180deg,#ffffff_0%,#e2e8f0_50%,#67e8f9_100%)] bg-clip-text text-[clamp(5rem,20vw,11rem)] font-semibold leading-none tracking-[-0.09em] text-transparent [text-shadow:0_0_40px_rgba(56,189,248,0.12)]"
                 >
-                  404
+                  <motion.span
+                    whileHover={reduceMotion ? undefined : { scale: 1.02, rotate: -0.6 }}
+                    transition={{ type: 'spring', stiffness: 160, damping: 12 }}
+                    className="inline-block"
+                  >
+                    404
+                  </motion.span>
                 </motion.h1>
 
                 <motion.div
@@ -175,8 +221,13 @@ export function NotFoundScene() {
                 </motion.div>
 
                 <div className="mt-8 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:justify-center">
-                  <ActionLink href="/" icon={Home} label="Go Home" />
-                  <GoBackButton />
+                  <div className="w-full sm:w-auto">
+                    <SearchForm />
+                  </div>
+                  <div className="flex w-full sm:w-auto sm:items-center sm:gap-3">
+                    <ActionLink href="/" icon={Home} label="Go Home" />
+                    <GoBackButton />
+                  </div>
                 </div>
               </div>
             </div>
