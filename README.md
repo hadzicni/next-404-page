@@ -182,8 +182,8 @@ Contributions are welcome. A possible workflow:
 <table>
 	<tr>
 		<td align="center" width="180">
-			<a href="https://github.com/nikolahadzic">
-			    <img src="https://github.com/nikolahadzic.png?size=160" width="96" height="96" alt="Nikola Hadzic" />
+			<a href="https://github.com/hadzicni">
+			    <img src="https://github.com/hadzicni.png?size=160" width="96" height="96" alt="Nikola Hadzic" />
 			    <br />
 			    <strong>Nikola Hadzic</strong>
 			</a>
