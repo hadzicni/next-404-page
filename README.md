@@ -6,7 +6,7 @@
 
 <br />
 
-Short, clear description of the project in one sentence.
+A customizable 404 page built with Next.js, designed to provide a user-friendly experience for visitors who encounter a 404 error on a website.
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](#license)
 [![Status](https://img.shields.io/badge/status-active-success.svg)](#overview)
