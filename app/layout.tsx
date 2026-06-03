@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const geistSans = Geist({
@@ -24,7 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">{children}
+        <Script
+          defer
+          src="https://analytics.nikolahadzic.dev/script.js"
+          data-website-id="5bc05014-e489-473c-96c6-345d061256f7"
+        />
+      </body>
     </html>
   );
 }
