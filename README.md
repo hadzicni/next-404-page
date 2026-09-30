@@ -103,7 +103,11 @@ yarn dev
 To customize the 404 page, you can modify the following files:
 
 - `not-found-scene.tsx`: Main component for the 404 page
-- `globals.css`: Styles for the 404 page
+- `_components/singularity-canvas.tsx`: Interactive black-hole particle canvas behind the "0"
+- `_components/scramble-text.tsx` / `_components/use-magnetic.ts`: Text scramble and magnetic button effects
+- `globals.css`: Styles and CSS animations (portal, glitch, tilt, marquee, grain)
+
+All animations respect `prefers-reduced-motion`, and the page renders fully without JavaScript.
 
 ## Usage
 
