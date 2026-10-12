@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { ArrowLeft, ArrowUpRight, Search } from 'lucide-react';
 
@@ -259,9 +259,11 @@ export function NotFoundScene() {
 
           <p className="mt-6 text-balance text-4xl font-medium tracking-[-0.03em] sm:mt-8 sm:text-6xl">
             {['Lost', 'in', 'the'].map((word, i) => (
-              <span key={word} className="word" style={{ animationDelay: `${0.7 + i * 0.08}s` }}>
-                {word}{' '}
-              </span>
+              <Fragment key={word}>
+                <span className="word" style={{ animationDelay: `${0.7 + i * 0.08}s` }}>
+                  {word}
+                </span>{' '}
+              </Fragment>
             ))}
             <span className="word font-serif font-normal italic tracking-[-0.01em] text-orange-200" style={{ animationDelay: '0.94s' }}>
               void.
