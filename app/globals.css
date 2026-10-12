@@ -104,7 +104,6 @@ body {
   width: 0.72em;
   height: 0.72em;
   margin: 0 0.06em;
-  cursor: pointer;
 }
 
 .portal > span {
@@ -402,33 +401,6 @@ body {
   }
 }
 
-@keyframes shake {
-  0%,
-  100% {
-    transform: none;
-  }
-
-  15% {
-    transform: translate3d(-10px, 6px, 0) rotate(-1deg);
-  }
-
-  30% {
-    transform: translate3d(9px, -8px, 0) rotate(1deg);
-  }
-
-  45% {
-    transform: translate3d(-7px, -4px, 0);
-  }
-
-  60% {
-    transform: translate3d(5px, 5px, 0);
-  }
-
-  75% {
-    transform: translate3d(-3px, 2px, 0);
-  }
-}
-
 /*
  * Every animation runs in CSS, not JS: the 404 markup ships fully rendered,
  * so the page still reads correctly if hydration is slow or never happens.
@@ -520,10 +492,6 @@ body {
   .grain {
     inset: -50%;
     animation: grain-shift 0.6s steps(4) infinite;
-  }
-
-  .shake {
-    animation: shake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
   }
 }
 

@@ -190,20 +190,11 @@ export function NotFoundScene() {
   const router = useRouter();
   const goBack = useGoBack();
   const rootRef = useRef<HTMLElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
   const portalRef = useRef<HTMLSpanElement>(null);
   const coordsRef = useRef<HTMLSpanElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   usePointerVars(rootRef, coordsRef);
-
-  const onNova = useCallback(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    hero.classList.remove('shake');
-    void hero.offsetWidth;
-    hero.classList.add('shake');
-  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -237,7 +228,7 @@ export function NotFoundScene() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.85)_100%)]" />
       </div>
 
-      <SingularityCanvas targetRef={portalRef} onNova={onNova} />
+      <SingularityCanvas targetRef={portalRef} />
 
       <header className="reveal relative z-10 flex items-center justify-between px-5 pt-5 font-mono text-[0.68rem] uppercase tracking-[0.22em] text-white/50 sm:px-8 sm:pt-7">
         <span className="inline-flex items-center gap-2.5">
@@ -250,7 +241,7 @@ export function NotFoundScene() {
       </header>
 
       <div className="relative z-10 flex flex-1 items-center justify-center px-5 py-10 sm:px-8">
-        <div ref={heroRef} className="flex w-full max-w-2xl flex-col items-center text-center">
+        <div className="flex w-full max-w-2xl flex-col items-center text-center">
           <p className="reveal reveal-1 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[0.7rem] text-white/60 backdrop-blur-md">
             <span className="text-orange-300">404</span>
             <span className="text-white/25">/</span>
@@ -291,16 +282,9 @@ export function NotFoundScene() {
             <SearchForm inputRef={searchRef} />
           </div>
 
-          <p className="reveal reveal-5 mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-white/35">
-            <span className="hidden items-center gap-4 pointer-fine:inline-flex">
-              <span className="inline-flex items-center gap-1.5"><Kbd>H</Kbd> home</span>
-              <span className="inline-flex items-center gap-1.5"><Kbd>B</Kbd> back</span>
-              <span className="text-white/15">·</span>
-            </span>
-            <span>
-              <span className="pointer-fine:hidden">Tap</span>
-              <span className="hidden pointer-fine:inline">Click</span> the void
-            </span>
+          <p className="reveal reveal-5 mt-6 hidden items-center justify-center gap-4 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-white/35 pointer-fine:flex">
+            <span className="inline-flex items-center gap-1.5"><Kbd>H</Kbd> home</span>
+            <span className="inline-flex items-center gap-1.5"><Kbd>B</Kbd> back</span>
           </p>
         </div>
       </div>

@@ -11,7 +11,7 @@ type Particle = {
   tilt: number;
   color: string;
   life: number;
-  /** Displacement from the orbit, pushed around by the cursor and shockwaves. */
+  /** Displacement from the orbit, pushed around by the cursor. */
   ox: number;
   oy: number;
   vx: number;
@@ -22,12 +22,8 @@ type Particle = {
 
 type Star = { x: number; y: number; z: number; size: number; phase: number };
 
-type Shock = { x: number; y: number; age: number; strength: number };
-
 const DISK_COLORS = ['255,246,235', '255,214,160', '255,170,90', '255,128,56', '255,92,48'];
 const HALO_COLORS = ['255,236,214', '255,190,120', '196,168,255'];
-
-const INTERACTIVE = 'a,button,input,textarea,select,label,form';
 
 function pick<T>(items: T[]) {
   return items[Math.floor(Math.random() * items.length)];
@@ -37,19 +33,8 @@ function pick<T>(items: T[]) {
  * Full-screen canvas that draws an accretion disk orbiting `targetRef`
  * (the "0" of the 404). Purely decorative: the page reads fine without it.
  */
-export function SingularityCanvas({
-  targetRef,
-  onNova,
-}: {
-  targetRef: RefObject<HTMLElement | null>;
-  onNova?: () => void;
-}) {
+export function SingularityCanvas({ targetRef }: { targetRef: RefObject<HTMLElement | null> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const onNovaRef = useRef(onNova);
-
-  useEffect(() => {
-    onNovaRef.current = onNova;
-  }, [onNova]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,9 +51,7 @@ export function SingularityCanvas({
     let outer = 400;
     let particles: Particle[] = [];
     let stars: Star[] = [];
-    const shocks: Shock[] = [];
     const pointer = { x: -9999, y: -9999, nx: 0, ny: 0, tnx: 0, tny: 0 };
-    let flash = 0;
     let raf = 0;
     let last = performance.now();
 
@@ -158,19 +141,6 @@ export function SingularityCanvas({
       const cosPhi = Math.cos(phi);
       const sinPhi = Math.sin(phi);
 
-      for (const shock of shocks) {
-        if (shock.age > 0) continue;
-        for (const p of particles) {
-          if (Number.isNaN(p.px)) continue;
-          const dx = p.px - shock.x;
-          const dy = p.py - shock.y;
-          const d = Math.hypot(dx, dy) || 1;
-          const force = shock.strength * Math.exp(-d / 320);
-          p.vx += (dx / d) * force;
-          p.vy += (dy / d) * force;
-        }
-      }
-
       for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
 
@@ -228,31 +198,6 @@ export function SingularityCanvas({
         p.px = x;
         p.py = y;
       }
-
-      for (let i = shocks.length - 1; i >= 0; i--) {
-        const shock = shocks[i];
-        shock.age += dt;
-        const life = 1 - shock.age / 1.1;
-        if (life <= 0) {
-          shocks.splice(i, 1);
-          continue;
-        }
-        ctx.strokeStyle = `rgba(255,200,150,${0.5 * life * life})`;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(shock.x, shock.y, shock.age * (shock.strength > 1500 ? 1600 : 900), 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      if (flash > 0.01) {
-        const glow = ctx.createRadialGradient(cx, cy, horizon, cx, cy, Math.max(width, height));
-        glow.addColorStop(0, `rgba(255,236,210,${flash})`);
-        glow.addColorStop(0.3, `rgba(255,140,60,${flash * 0.4})`);
-        glow.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = glow;
-        ctx.fillRect(0, 0, width, height);
-        flash *= Math.pow(0.02, dt);
-      }
     };
 
     const loop = (now: number) => {
@@ -276,19 +221,6 @@ export function SingularityCanvas({
       pointer.tny = 0;
     };
 
-    const onPointerDown = (e: PointerEvent) => {
-      if ((e.target as Element | null)?.closest?.(INTERACTIVE)) return;
-
-      if (Math.hypot(e.clientX - cx, e.clientY - cy) < horizon * 1.1) {
-        shocks.push({ x: cx, y: cy, age: 0, strength: 2600 });
-        flash = 0.55;
-        onNovaRef.current?.();
-        return;
-      }
-
-      shocks.push({ x: e.clientX, y: e.clientY, age: 0, strength: 900 });
-    };
-
     resize();
 
     if (reduceMotion) {
@@ -305,14 +237,12 @@ export function SingularityCanvas({
     raf = requestAnimationFrame(loop);
     window.addEventListener('resize', resize);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerdown', onPointerDown);
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerdown', onPointerDown);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
     };
   }, [targetRef]);
