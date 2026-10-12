@@ -104,9 +104,9 @@ export function SingularityCanvas({ targetRef }: { targetRef: RefObject<HTMLElem
       measure();
       outer = Math.max(horizon * 3, Math.min(width * 0.55, height * 1.1));
 
-      const count = Math.round(Math.min(1100, Math.max(320, (width * height) / 1500)));
+      const count = Math.round(Math.min(650, Math.max(200, (width * height) / 2200)));
       particles = Array.from({ length: count }, () => spawn({}, true));
-      stars = Array.from({ length: Math.round((width * height) / 9000) }, () => ({
+      stars = Array.from({ length: Math.round((width * height) / 14000) }, () => ({
         x: Math.random(),
         y: Math.random(),
         z: 0.2 + Math.random() * 0.8,
@@ -123,12 +123,12 @@ export function SingularityCanvas({ targetRef }: { targetRef: RefObject<HTMLElem
 
       // Fade the previous frame instead of clearing it, which leaves motion trails.
       ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = `rgba(0,0,0,${reduceMotion ? 1 : 0.22})`;
+      ctx.fillStyle = `rgba(0,0,0,${reduceMotion ? 1 : 0.26})`;
       ctx.fillRect(0, 0, width, height);
       ctx.globalCompositeOperation = 'lighter';
 
       for (const s of stars) {
-        const twinkle = 0.55 + 0.45 * Math.sin(now * 0.0012 * s.z + s.phase);
+        const twinkle = 0.75 + 0.25 * Math.sin(now * 0.0006 * s.z + s.phase);
         const x = s.x * width - pointer.nx * 24 * s.z;
         const y = s.y * height - pointer.ny * 24 * s.z;
         ctx.fillStyle = `rgba(255,240,225,${0.12 * twinkle * s.z})`;
@@ -146,8 +146,8 @@ export function SingularityCanvas({ targetRef }: { targetRef: RefObject<HTMLElem
 
         // Keplerian-ish: inner orbits are faster, and everything slowly spirals in.
         const rel = horizon / p.radius;
-        p.angle += p.speed * 2.4 * Math.pow(rel, 1.5) * dt;
-        p.radius -= p.speed * horizon * 0.035 * (0.4 + rel * rel * 3) * dt;
+        p.angle += p.speed * 1.8 * Math.pow(rel, 1.5) * dt;
+        p.radius -= p.speed * horizon * 0.028 * (0.4 + rel * rel * 3) * dt;
         p.life = Math.min(1, p.life + dt * 0.8);
 
         if (p.radius < horizon * 0.94) {
@@ -180,7 +180,7 @@ export function SingularityCanvas({ targetRef }: { targetRef: RefObject<HTMLElem
         // Relativistic beaming: the side moving toward us glows brighter.
         const beaming = p.tilt < 0.9 ? 0.55 + 0.45 * Math.cos(p.angle + Math.PI / 2) : 0.8;
         const t = (p.radius - horizon) / (outer - horizon);
-        const alpha = Math.max(0, (1 - t) ** 1.4) * beaming * p.life;
+        const alpha = Math.max(0, (1 - t) ** 1.4) * beaming * p.life * 0.85;
 
         if (alpha > 0.01) {
           ctx.strokeStyle = `rgba(${p.color},${Math.min(1, alpha)})`;
